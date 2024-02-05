@@ -1,21 +1,27 @@
 import { Fragment } from 'react';
+import { MouseEvent } from 'react';
 
 function ListGroup() {
-  let list: Array<string> = ['NewYork', 'Chicago', 'Hawaii'];
+  const list: Array<string> = ['NewYork', 'Chicago', 'Hawaii'];
 
-  list = [];
   const getMessage = () => {
     return list.length === 0 ? <p>No item found</p> : null;
+  };
+
+  const handleClick = (event: MouseEvent) => {
+    console.log(event);
   };
 
   return (
     <Fragment>
       <h1>List</h1>
-      {getMessage()}
+      {/* {getMessage()} */}
       {list.length === 0 && <p>No item found</p>}
       <ul className="list-group">
         {list.map((item) => (
-          <li key={item}>{item}</li>
+          <li className="list-group-item" key={item} onClick={handleClick}>
+            {item}
+          </li>
         ))}
       </ul>
     </Fragment>
