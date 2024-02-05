@@ -2,9 +2,13 @@ import { Fragment } from 'react';
 import { MouseEvent } from 'react';
 import { useState } from 'react';
 
-function ListGroup() {
-  const list: Array<string> = ['NewYork', 'Chicago', 'Hawaii'];
+interface ListGroup {
+  list: string[];
+  heading: string;
+  onSelectItem: (item: string) => void;
+}
 
+function ListGroup({ list, heading, onSelectItem }: ListGroup) {
   //hook
   const [selectedIndex, setSelectedIndex] = useState(-1);
 
@@ -18,7 +22,7 @@ function ListGroup() {
 
   return (
     <Fragment>
-      <h1>List</h1>
+      <h1>{heading}</h1>
       {/* {getMessage()} */}
       {list.length === 0 && <p>No item found</p>}
       <ul className="list-group">
@@ -32,6 +36,7 @@ function ListGroup() {
             key={item}
             onClick={() => {
               setSelectedIndex(index);
+              onSelectItem(item);
             }}>
             {item}
           </li>

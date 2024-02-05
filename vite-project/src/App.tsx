@@ -2,9 +2,15 @@
 import ListGroup from './components/ListGroup';
 
 function App() {
+  const list: Array<string> = ['NewYork', 'Chicago', 'Hawaii'];
+
+  function handleOnSelect(item: string) {
+    console.log(item);
+  }
+
   return (
     <div>
-      <ListGroup />
+      <ListGroup list={list} heading="City" onSelectItem={handleOnSelect} />
     </div>
   );
 }
