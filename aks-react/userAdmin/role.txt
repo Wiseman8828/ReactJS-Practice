@@ -1,0 +1,215 @@
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, Checkbox, Button, Typography, Box, Input } from '@mui/material';
+
+const ManageUserRolePopup = ({ isOpen, onClose, user, onSave }) => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [roles, setRoles] = useState({
+        maker: false,
+        checker: false
+    });
+    const [specialAccess, setSpecialAccess] = useState({
+        HNI: false,
+        Admin: false,
+        HeadOfLPM: false
+    });
+
+    useEffect(() => {
+        if (user) {
+            setName(user.name);
+            setEmail(user.email);
+            setRoles({
+                maker: user.maker,
+                checker: user.checker
+            });
+            setSpecialAccess({
+                HNI: user.HNI,
+                Admin: user.admin,
+                HeadOfLPM: user.headOfLPM
+            });
+        }
+    }, [user]);
+
+    const handleRoleChange = (e) => {
+        const { name, checked } = e.target;
+        setRoles(prevRoles => ({ ...prevRoles, [name]: checked }));
+    };
+
+    const handleSpecialAccessChange = (e) => {
+        const { name, checked } = e.target;
+        setSpecialAccess(prevAccess => ({ ...prevAccess, [name]: checked }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const userData = {
+            name,
+            email,
+            roles: Object.keys(roles).filter(role => roles[role]),
+            specialAccess: Object.keys(specialAccess).filter(access => specialAccess[access])
+        };
+        onSave(userData);
+        onClose();
+    };
+
+    return (
+        <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
+            <DialogTitle>{user ? 'Manage User Role' : 'Add New User'}</DialogTitle>
+            <form onSubmit={handleSubmit}>
+                <DialogContent>
+                    <Box marginBottom={2}>
+                        <div style={{ display: 'flex' }}>
+                            <div style={{ margin: '0 70px 0 0' }}>
+                                Name
+                                <Input
+                                    placeholder="Name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    fullWidth
+                                    required
+                                />
+                            </div>
+                            <div>
+                                Email
+                                <Input
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    fullWidth
+                                    required
+                                />
+                            </div>
+
+                        </div>
+
+                    </Box>
+
+                    <Box marginBottom={2}>
+                        <Typography variant="h6">Select Roles</Typography>
+                        <hr></hr>
+                        <div>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={roles.maker}
+                                        onChange={handleRoleChange}
+                                        name="maker"
+                                    />
+                                }
+                                label="Maker"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={roles.checker}
+                                        onChange={handleRoleChange}
+                                        name="checker"
+                                    />
+                                }
+                                label="Checker"
+                            />
+                        </div>
+
+
+                    </Box>
+                    <Box marginBottom={2}>
+                        <Typography variant="h6">Special Access</Typography>
+                        <hr></hr>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={specialAccess.HNI}
+                                    onChange={handleSpecialAccessChange}
+                                    name="HNI"
+                                />
+                            }
+                            label="HNI"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={specialAccess.Admin}
+                                    onChange={handleSpecialAccessChange}
+                                    name="Admin"
+                                />
+                            }
+                            label="Admin"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={specialAccess.HeadOfLPM}
+                                    onChange={handleSpecialAccessChange}
+                                    name="HeadOfLPM"
+                                />
+                            }
+                            label="Head of LPM"
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions style={{ justifyContent: 'center' }}>
+                    <Button variant="contained" type="submit" color="primary" style={{ 'borderRadius': "10px 0px"}}>
+                        {user ? 'Save' : 'Submit'}
+                    </Button>
+                    <Button variant="contained" onClick={onClose} style={{ 'border-radius': "10px 0px", 'background': 'white', 'color': 'black'}}>
+                        Cancel
+                    </Button>
+
+                </DialogActions>
+            </form>
+        </Dialog>
+    );
+};
+
+export default ManageUserRolePopup;
+
+
+
+
+
+
+
+
+
+
+  const [editPopUp, setEditPopUp] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [newUserPopUp, setnewUserPopUp] = useState(false);
+
+
+  const handleOpenEditPopup = (user = null) => {
+    setEditingUser(user);
+    setEditPopUp(true);
+  };
+
+  const handleEditOperation = (userData) => {
+    if (editingUser) {
+      console.log('Updating user:', userData);
+    } else {
+      console.log('Creating new user:', userData);
+    }
+  };
+
+  const handleNewUserPopUpOpen = () => {
+    setnewUserPopUp(true);
+  };
+
+  const handleSaveOperation = (userData) => {
+    console.log('save operation' , userData)
+  };
+
+
+
+      <Box>
+      <ManageUserRolePopup isOpen={editPopUp} 
+        onClose={() => setEditPopUp(false)}
+        user={editingUser} onSave={handleEditOperation}
+      />
+    </Box>
+
+    <Box>
+      <ManageUserRolePopup isOpen={newUserPopUp} 
+        onClose={() => setnewUserPopUp(false)}
+        user={editingUser} onSave={handleSaveOperation}
+      />
+    </Box>
